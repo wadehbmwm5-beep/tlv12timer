@@ -318,27 +318,27 @@
 <script>
 // تحديد التواريخ مع مراعاة المنطقة الزمنية للعراق (UTC+3) لضمان الدقة
 const schedule = [
-  { name: "الاحياء", date: new Date("2026-06-14T07:00:00+03:00").getTime() },
-  { name: "كوردي", date: new Date("2026-06-17T07:00:00+03:00").getTime() },
-  { name: "الرياضيات", date: new Date("2026-06-21T07:00:00+03:00").getTime() },
-  { name: "العربي/دين اسلامي", date: new Date("2026-06-24T07:00:00+03:00").getTime() },
-  { name: "الكيمياء", date: new Date("2026-06-28T07:00:00+03:00").getTime() },
-  { name: "الانكليزي", date: new Date("2026-07-01T07:00:00+03:00").getTime() },
-  { name: "الفيزياء", date: new Date("2026-07-05T07:00:00+03:00").getTime() },
-  { name: "سرياني/دين مسيحي ", date: new Date("2026-07-08T07:00:00+03:00").getTime() }
+  { name: "الاحياء", date: new Date("2027-06-01T07:00:00+03:00").getTime() },
+  { name: "كوردي", date: new Date("2027-06-04T07:00:00+03:00").getTime() },
+  { name: "الرياضيات", date: new Date("2027-06-08T07:00:00+03:00").getTime() },
+  { name: "العربي/دين اسلامي", date: new Date("2027-06-11T07:00:00+03:00").getTime() },
+  { name: "الكيمياء", date: new Date("2027-06-15T07:00:00+03:00").getTime() },
+  { name: "الانكليزي", date: new Date("2027-06-18T07:00:00+03:00").getTime() },
+  { name: "الفيزياء", date: new Date("2027-06-22T07:00:00+03:00").getTime() },
+  { name: "سرياني/دين مسيحي ", date: new Date("2027-06-25T07:00:00+03:00").getTime() }
 ];
 
 // جدول الدور الثاني: نفس أسماء مواد الدور الأول وبنفس ترتيبها وفواصلها الزمنية،
 // مع بداية من تاريخ 2026-08-11 (يمكن تعديل التواريخ لاحقاً إذا صدر جدول رسمي مختلف)
 const schedule2 = [
-  { name: "الاحياء", date: new Date("2026-08-11T07:00:00+03:00").getTime() },
-  { name: "كوردي", date: new Date("2026-08-13T07:00:00+03:00").getTime() },
-  { name: "الرياضيات", date: new Date("2026-08-16T07:00:00+03:00").getTime() },
-  { name: "العربي/دين اسلامي", date: new Date("2026-08-18T07:00:00+03:00").getTime() },
-  { name: "الكيمياء", date: new Date("2026-08-20T07:00:00+03:00").getTime() },
-  { name: "الانكليزي", date: new Date("2026-08-23T07:00:00+03:00").getTime() },
-  { name: "الفيزياء", date: new Date("2026-08-27T07:00:00+03:00").getTime() },
-  { name: "سرياني/دين مسيحي ", date: new Date("2026-08-30T07:00:00+03:00").getTime() }
+  { name: "الاحياء", date: new Date("2027-08-11T07:00:00+03:00").getTime() },
+  { name: "كوردي", date: new Date("2027-08-13T07:00:00+03:00").getTime() },
+  { name: "الرياضيات", date: new Date("2027-08-16T07:00:00+03:00").getTime() },
+  { name: "العربي/دين اسلامي", date: new Date("2027-08-18T07:00:00+03:00").getTime() },
+  { name: "الكيمياء", date: new Date("2027-08-20T07:00:00+03:00").getTime() },
+  { name: "الانكليزي", date: new Date("2027-08-23T07:00:00+03:00").getTime() },
+  { name: "الفيزياء", date: new Date("2027-08-27T07:00:00+03:00").getTime() },
+  { name: "سرياني/دين مسيحي ", date: new Date("2027-08-30T07:00:00+03:00").getTime() }
 ];
 
 const secondDate = schedule2[schedule2.length - 1].date;
