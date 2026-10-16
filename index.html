@@ -626,7 +626,6 @@ async function syncTime() {
       timeOffset = 0; // آخر خيار: وقت الجهاز
     }
   }
-  note.textContent = synced ? "الوقت مضبوط على توقيت بغداد" : "يعتمد على وقت جهازك";
 }
 
 const now = () => Date.now() + timeOffset;
