@@ -672,6 +672,8 @@ function updateAll() {
   $("r1-days-total").textContent = daysToFirst > 0 ? `${daysToFirst} يوم على أول امتحان` : "";
 
   if ($("list-modal").classList.contains("active")) renderList(t);
+  updateReadyCount();
+  if ($("ready-modal").classList.contains("active") && shownReadyRound !== readyRound(t)) renderReady();
 }
 
 // ===================== نافذة الجدول =====================
@@ -743,28 +745,42 @@ document.querySelectorAll(".tab").forEach(tab => {
 });
 
 // ===================== الجاهزية =====================
-// بس علامة صح على كل مادة خلصها الطالب، وتنحفظ بجهازه
-const readyDone = store.get("ready-done-v1", []);
+// بس علامة صح على كل مادة خلصها الطالب، وتنحفظ بجهازه.
+// بعد آخر امتحان بالدور الأول تتحول وحدها للدور الثاني، وعلاماته تبدي من جديد.
+const readyKeys = { 1: "ready-done-v1", 2: "ready-done-r2-v1" };
+const readyDone = { 1: store.get(readyKeys[1], []), 2: store.get(readyKeys[2], []) };
+let shownReadyRound = 0;
+
+const readyRound = (t = now()) => schedule.some(e => e.date > t) ? 1 : 2;
+const roundList = (round) => round === 1 ? schedule : schedule2;
 
 function updateReadyCount() {
-  const n = schedule.filter(e => readyDone.includes(e.name)).length;
-  $("ready-count").textContent = `${n}/${schedule.length}`;
-  $("ready-text").innerHTML = n ? `جاهز بـ <strong>${n}</strong> من ${schedule.length} مواد` : "ضع علامة صح على المادة اللي خلصتها";
-  $("ready-bar").style.width = (n / schedule.length * 100) + "%";
+  const round = readyRound();
+  const list = roundList(round);
+  const done = readyDone[round];
+  const n = list.filter(e => done.includes(e.name)).length;
+  $("ready-title").textContent = round === 1 ? "جاهزيتي للدور الأول" : "جاهزيتي للدور الثاني";
+  $("ready-count").textContent = `${n}/${list.length}`;
+  $("ready-text").innerHTML = n ? `جاهز بـ <strong>${n}</strong> من ${list.length} مواد` : "ضع علامة صح على المادة اللي خلصتها";
+  $("ready-bar").style.width = (n / list.length * 100) + "%";
   return n;
 }
 
 function renderReady() {
   const t = now();
-  const nextIdx = schedule.findIndex(e => e.date > t);
+  const round = readyRound(t);
+  const list = roundList(round);
+  const done = readyDone[round];
+  shownReadyRound = round;
+  const nextIdx = list.findIndex(e => e.date > t);
   const n = updateReadyCount();
-  const note = n === schedule.length ? '<div class="ready-done-note">عاشت ايدك! كل موادك جاهزة 🤍</div>' : "";
-  $("ready-body").innerHTML = note + schedule.map((exam, i) => {
+  const note = n === list.length ? '<div class="ready-done-note">عاشت ايدك! كل موادك جاهزة 🤍</div>' : "";
+  $("ready-body").innerHTML = note + list.map((exam, i) => {
     const days = Math.ceil((exam.date - t) / DAY);
     const left = days > 0 ? `باقي ${days} يوم` : "انتهت";
     return `
       <label class="check-item ${i === nextIdx ? "next" : ""}">
-        <input type="checkbox" data-name="${exam.name}" ${readyDone.includes(exam.name) ? "checked" : ""}>
+        <input type="checkbox" data-name="${exam.name}" ${done.includes(exam.name) ? "checked" : ""}>
         <span class="check-box"><i class="fas fa-check"></i></span>
         <span class="check-text">
           <span class="n">${exam.name}</span>
@@ -775,18 +791,20 @@ function renderReady() {
 }
 
 $("ready-body").addEventListener("change", (e) => {
+  const round = shownReadyRound || readyRound();
+  const done = readyDone[round];
   const name = e.target.dataset.name;
-  const idx = readyDone.indexOf(name);
-  if (e.target.checked && idx < 0) readyDone.push(name);
-  if (!e.target.checked && idx >= 0) readyDone.splice(idx, 1);
-  store.set("ready-done-v1", readyDone);
+  const idx = done.indexOf(name);
+  if (e.target.checked && idx < 0) done.push(name);
+  if (!e.target.checked && idx >= 0) done.splice(idx, 1);
+  store.set(readyKeys[round], done);
   renderReady();
-  if (readyDone.length === schedule.length && e.target.checked) toast("كملت كل المواد، كمّل مراجعة 💪");
+  if (done.length === roundList(round).length && e.target.checked) toast("كملت كل المواد، كمّل مراجعة 💪");
 });
 
 // ===================== المشاركة =====================
 $("share-btn").addEventListener("click", async () => {
-  const next = schedule.find(e => e.date > now());
+  const next = schedule.find(e => e.date > now()) || schedule2.find(e => e.date > now());
   const days = next ? Math.ceil((next.date - now()) / DAY) : 0;
   const text = next ? `باقي ${days} يوم على امتحان ${next.name} الوزاري ⏳` : "عداد الوزاري";
   const url = location.href;
