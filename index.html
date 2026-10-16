@@ -810,7 +810,7 @@ $("share-btn").addEventListener("click", async () => {
   if (navigator.share) {
     try { await navigator.share({ title: "عداد الوزاري", text, url }); } catch (e) {}
   } else {
-    try { await navigator.clipboard.writeText(`${text}\n${url}`); toast("انسخ الرابط، شاركه وي ربعك"); }
+    try { await navigator.clipboard.writeText(`${text}\n${url}`); toast("انسخ الرابط، شاركه مع اصدقاء"); }
     catch (e) { toast(url); }
   }
 });
